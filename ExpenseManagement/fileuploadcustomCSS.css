@@ -1,0 +1,18 @@
+.card .slds-file-selector__dropzone .slds-file-selector__text{
+    font-size: 0 !important;
+} 
+.card .slds-file-selector__dropzone .slds-file-selector__text:after{
+    /* content: 'Or Test Drop' !important; */
+    font-size: .8125rem !important;
+}
+.card .slds-file-selector__dropzone .slds-file-selector__button{
+    font-size: 0 !important;
+}
+.card .slds-file-selector__dropzone .slds-file-selector__button:after{
+    /* content: 'New Upload' !important; */
+    font-size: .8125rem !important;
+    color: rgba(27, 82, 151, 1.0) !important;
+}
+.card .slds-file-selector__dropzone {
+    border: none;
+}

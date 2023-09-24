@@ -1,0 +1,90 @@
+<template>
+    <div style="background-color: #efe9e9; padding: 10px; border-radius: 5px;">
+        <!-- <div style="background-color: white;">
+            <c-visit-viewer></c-visit-viewer>
+        </div> -->
+        <div style="background-color: #1A1A1A; width:100%; Padding:15px; border-radius: 4px;">
+            <div style="font-size: 17px; font-weight: 700;color: white; margin-bottom: 25px;">
+                Current Date - {todayTime}
+            </div>
+            <div class="slds-grid slds-grid_align-spread">
+                <div class="slds-col" style="font-size: 17px; font-weight: 700;color: white;">
+                    <div>
+                        Current Time
+                    </div>
+                    <div style="font-size: 25px; color:#1080a0;">
+                        {currentTime}{secondCount}
+                    </div>
+                </div>
+                <div class="slds-col" style="font-size: 15px; margin-top: 15px;">
+                    <template if:true={isVisitStart}>
+                        <button
+                            style="border-radius: 4px; background-color:#1080a0; color: white; padding: 5px; border: 1px; font-weight: 600;"
+                            disabled={isDisable} onclick={handlevisitStart}>Visit Start</button>
+                    </template>
+                    <template if:true={isVisitEnd}>
+                        <button
+                            style="border-radius: 4px; background-color:#1080a0; color: white; padding: 5px; border: 1px; font-weight: 600;"
+                            disabled={isDisable} onclick={handlevisitEnd}>Visit End</button>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <template if:true={askForPlace}>
+                <div style="margin-top : 10px; padding: 20px; background-color:white; border-radius : 10px;">
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-size: 11px; font-weight : 600;"><span style="color: red;">*</span>Starting Point </div>
+                            <lightning-combobox required options={StartPlaceOptions} variant="label-hidden"
+                                data-field="Starting_Point__c" value={createVisit.Starting_Point__c}
+                                onchange={handleVisitInputChange}></lightning-combobox>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-size: 11px; font-weight : 600;"><span style="color: red;">*</span>Mode of Travel</div>
+                            <lightning-combobox required options={visitModeOptions} variant="label-hidden"
+                                data-field="Mode__c" value={createVisit.Mode__c}
+                                onchange={handleVisitInputChange}></lightning-combobox>
+                        </div>
+                        <template if:true={isHomeSelected}>
+                            <div style="margin-bottom: 10px;">
+                                <div style="font-size: 11px; font-weight : 600;"><span style="color: red;">*</span>Remark </div>
+                                <lightning-input required variant="label-hidden" data-field="Remark__c"
+                                    value={createVisit.Remark__c} onchange={handleVisitInputChange}></lightning-input>
+                            </div>
+                        </template>
+                    <div style="display: flex; justify-content: center;">
+                        <button
+                            style="background-color: white;  color: #0176d3; border-radius: 4px; border: 1px; padding: 5px 11px; margin-right: 12px;"
+                            onclick={handleCancelPopup}>Cancel</button>
+                        <template if:true={AllFilled}>
+                            <button
+                                style="background-color: #0176d3; color: white; border-radius: 4px; border: 1px; padding:5px"
+                                onclick={handleContinue}>Continue</button>
+                        </template>
+                    </div>
+                </div>
+        </template>
+    </div>
+    <template if:true={mapHaveData}>
+        <lightning-map
+            map-markers={mapMarkers}
+            markers-title="Today's Visits"
+            onmarkerselect={handleMarkerSelect}
+            selected-marker-value={selectedMarkerValue}
+            zoom-level="12" 
+            list-view="visible" 
+            center={center}
+        >
+        </lightning-map>
+    </template>
+    <template if:true={isDetailVisible}>
+        <div style="background-color : white; padding: 10px;">
+            <c-record-page-of-event
+            event-id={evtId}
+            visit-id={visitRecordId}
+            customer-address={customerAddress}
+            customer-name={customerName}
+            oncancel={handleRecordPageCancel}
+            ></c-record-page-of-event>
+        </div> 
+    </template>
+</template>

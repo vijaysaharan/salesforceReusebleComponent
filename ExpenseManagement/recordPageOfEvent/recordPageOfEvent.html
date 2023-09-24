@@ -1,0 +1,96 @@
+<template>
+    <template if:true={isClicked}>
+        <div style="padding: 10px;">
+                <div class="slds-grid slds-grid_align-spread" style="background-color: #d1c4c4; padding: 10px; line-height: 2; border-radius: 5px;">
+                    <div class="slds-col" >
+                        <div style="color: #2d76e3; font-size: 20px; font-weight: 600;">{customerName}</div>
+                        <div class="slds-m-right_x-large">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                <path fill="gray"
+                                    d="M8 0C5.2 0 3 2.2 3 5s4 11 5 11s5-8.2 5-11s-2.2-5-5-5zm0 8C6.3 8 5 6.7 5 5s1.3-3 3-3s3 1.3 3 3s-1.3 3-3 3z" />
+                            </svg>
+                            <span style="font-size: 13px; font-weight: 600;">{customerAddress}</span>
+                        </div>
+                    </div>
+                    <div class="slds-col" style="align-items: center;display: flex;">
+                        <template if:true={isCheckIn}>
+                            <lightning-button variant="brand" label="Check In" onclick={handleCheckIn}
+                            class="slds-m-left_x-small"></lightning-button>
+                        </template>
+                        <template if:true={isCheckOut}>
+                            <lightning-button variant="brand" label="Check Out" onclick={handleCheckOut}
+                            class="slds-m-left_x-small"></lightning-button>
+                        </template>
+                        <lightning-button variant="brand" label="Update Expense" onclick={handleAddExpense}
+                            class="slds-m-left_x-small"></lightning-button>
+                    </div>
+                </div>
+            <div style="padding: 10px;">
+                <div class="slds-grid">
+                    <div class="slds-col">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-m-top_xx-small slds-size_4-of-12">Assigned To </div>
+                            <div class="slds-col"><lightning-input type="text" variant="label-hidden" read-only
+                                    data-field="OwnerId" value={eventData.assignedToName}></lightning-input></div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-m-top_xx-small slds-size_4-of-12">Name </div>
+                            <div class="slds-col"><lightning-input type="text" variant="label-hidden" read-only
+                                    data-field="WhoId" value={eventData.customerName}></lightning-input></div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-m-top_xx-small slds-size_4-of-12">Type </div>
+                            <div class="slds-col"><lightning-input type="text" variant="label-hidden" read-only
+                                    data-field="Type" value={eventData.Type}></lightning-input></div>
+                        </div>
+                    </div>
+                    <div class="slds-col">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-m-top_xx-small slds-size_4-of-12">Related To </div>
+                            <div class="slds-col"><lightning-input type="text" variant="label-hidden" read-only
+                                    data-field="WhatId" value={eventData.relatedName}></lightning-input></div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-m-top_xx-small slds-size_4-of-12">Start </div>
+                            <div class="slds-col"><lightning-input type="text" variant="label-hidden" read-only
+                                    data-field="StartDateTime" value={eventData.startTime}></lightning-input></div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-m-top_xx-small slds-size_4-of-12">End </div>
+                            <div class="slds-col"><lightning-input type="text" variant="label-hidden" read-only
+                                    data-field="EndDateTime" value={eventData.endTime}></lightning-input></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="slds-grid slds-m-bottom_xx-small">
+                        <!-- <div class="slds-col slds-m-top_xx-small slds-size_1-of-12">Status </div> -->
+                        <div class="slds-col"><lightning-combobox required options={statusOptionList}
+                                label="Status" data-field="Status__c" value={eventData.Status__c}
+                                onchange={handleEventInputChange}></lightning-combobox></div>
+                    </div>
+                    <div class="slds-grid slds-m-bottom_xx-small">
+                        <!-- <div class="slds-col slds-m-top_xx-small slds-size_1-of-12">Subject </div> -->
+                        <div class="slds-col"><lightning-input type="text" label="Subject" data-field="Subject"
+                                onchange={handleEventInputChange} required value={eventData.Subject}></lightning-input></div>
+                    </div>
+                    <lightning-textarea name="Description" label="Description" required data-field="Description"
+                    onchange={handleEventInputChange} value={eventData.Description}></lightning-textarea>
+                </div>
+                <div class="slds-m-top_small slds-align_absolute-center">
+                    <lightning-button variant="Neutral" label="Cancel" onclick={handleCancelClick}
+                        class="slds-m-left_x-small"></lightning-button>
+                    <lightning-button variant="brand" label="Save" onclick={handleSaveClick}
+                        class="slds-m-left_x-small"></lightning-button>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template if:true={isUpdateExpenseClicked}>
+        <c-update-expense-item
+        record-id={eventId}
+        visit-id={visitId}
+        oncancel={handleCancelOfUpdateExpense}
+        ></c-update-expense-item>
+    </template>
+</template>

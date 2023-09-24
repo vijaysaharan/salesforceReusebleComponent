@@ -1,0 +1,20 @@
+/* @media (min-width: 769px) {
+    .desktop-layout {
+      display: block;
+    }
+    .mobile-layout {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .desktop-layout {
+      display: none; 
+    }
+    .mobile-layout {
+      display: block;
+    }
+  } */
+.no_class{
+  border: 1px;
+}

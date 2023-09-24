@@ -1,0 +1,6 @@
+.inputStyleOverload {
+    --slds-c-input-shadow : none;
+    --slds-c-input-shadow-focus : none;
+    --slds-c-input-color-border : white;
+    --slds-c-input-color-border-focus : white;
+}

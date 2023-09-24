@@ -1,0 +1,495 @@
+<template>
+    <div class="desktop-layout">
+        <lightning-quick-action-panel header="UPDATE EXPENSE">
+            <template for:each={customerExpenseData} for:item="item">
+                <div key={item.customerData.Id}
+                    style="line-height : 20px; background-color:#d1c4c4; font-family:verdana;font-size:11px;padding-top: 5px;padding-bottom: 5px;"
+                    class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                    <div class="slds-col slds-p-left_small" style="color:black;">
+                        {item.customerData.customerName} <br /> Check In TIme: {item.customerData.CheckInTime} <br />
+                        Check
+                        Out Time:
+                        {item.customerData.CheckOutTime}</div>
+                </div>
+                <template for:each={item.expenseDataList} for:item="exp">
+                    <div key={exp.PageName} class="slds-m-bottom-small"
+                        style="font-family:verdana;font-size:12px; color : black !important; font-weight : 600 !important;">
+                        <div>{exp.PageName}</div>
+                        <div class="">
+                            <table
+                                class="slds-table slds-table_bordered slds-table_cell-buffer slds-var-m-bottom_large">
+                                <thead style="position: sticky; top: 0; z-index: 100;">
+                                    <tr class="slds-text-title_caps" style="font-family:verdana;font-size:11px;">
+                                        <template if:true={exp.isMiscellaneous}>
+                                            <th>
+                                                <div class="slds-truncate">
+                                                    Date
+                                                </div>
+                                            </th>
+                                        </template>
+                                        <template if:false={exp.isMiscellaneous}>
+                                            <th>
+                                                <div class="slds-truncate">
+                                                    From<br />Date
+                                                </div>
+                                            </th>
+                                            <template if:true={exp.isTravel}>
+                                                <th>
+                                                    <div class="slds-truncate">
+                                                        From<br />Place
+                                                    </div>
+                                                </th>
+                                            </template>
+                                            <th>
+                                                <div class="slds-truncate">
+                                                    To <br />Date
+                                                </div>
+                                            </th>
+                                        </template>
+                                        <template if:true={exp.isTravel}>
+                                            <th>
+                                                <div class="slds-truncate">
+                                                    To <br />Place
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="slds-truncate">
+                                                    Mode
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="slds-truncate">
+                                                    Distance
+                                                </div>
+                                            </th>
+                                        </template>
+                                        <template if:false={exp.isMiscellaneous}>
+                                            <template if:false={exp.isTravel}>
+                                                <th>
+                                                    <div class="slds-truncate">
+                                                        Days
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="slds-truncate">
+                                                        State <br />Name
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="slds-truncate">
+                                                        City <br />Name
+                                                    </div>
+                                                </th>
+                                            </template>
+                                            <template if:true={exp.isLodging}>
+                                                <th>
+                                                    <div class="slds-truncate">
+                                                        Hotel/Lodge <br />Name
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="slds-truncate">
+                                                        Bill <br />Number
+                                                    </div>
+                                                </th>
+                                            </template>
+                                        </template>
+                                        <template if:true={exp.isMiscellaneous}>
+                                            <th>
+                                                <div class="slds-truncate">
+                                                    Paticulars
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="slds-truncate">
+                                                    Bill <br />Number
+                                                </div>
+                                            </th>
+                                        </template>
+                                        <th>
+                                            <div class="slds-truncate">
+                                                Amount
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="slds-truncate">
+                                                Description
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="slds-truncate">
+                                                Upload<br />File
+                                            </div>
+                                        </th>
+                                        <!-- <template if:false={exp.isTravel}> -->
+                                        <th style="float: right; background-color : white !important;">
+                                            <lightning-button variant="brand" icon-name="utility:add"
+                                                data-page={exp.PageName} data-name={exp.PageId}
+                                                data-id={item.customerData.Id}
+                                                onclick={handleAddExpense}></lightning-button>
+                                        </th>
+                                        <!-- </template> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={exp.expenseDataListEach} for:item="expense">
+                                        <tr key={expense.fakeId}>
+                                            <template if:true={expense.isTravel}>
+                                                <td>
+                                                    <lightning-input data-page={exp.PageName} type="date" read-only
+                                                        variant="label-hidden" data-field="From_Date__c"
+                                                        value={expense.From_Date__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <template if:true={expense.isTravelCustom}>
+                                                    <td>
+                                                        <lightning-formatted-text
+                                                            style="text-align: left; width: 140px; display: flex; text-wrap: wrap; font-weight: 400;"
+                                                            value={expense.From__c}></lightning-formatted-text>
+                                                    </td>
+                                                    <td>
+                                                        <lightning-input data-page={exp.PageName} type="date"
+                                                            variant="label-hidden" data-field="To_Date__c"
+                                                            value={expense.To_Date__c} data-id={expense.fakeId}
+                                                            onchange={handleExpenseChange}
+                                                            min={item.customerData.CheckInDate}
+                                                            max={item.customerData.CheckOutDate}
+                                                            data-name={item.customerData.Name}></lightning-input>
+                                                    </td>
+                                                    <td>
+                                                        <lightning-formatted-text
+                                                            style="text-align: left; width: 140px; display: flex; text-wrap: wrap; font-weight: 400;"
+                                                            value={expense.To__c}></lightning-formatted-text>
+                                                    </td>
+                                                </template>
+                                                <template if:false={expense.isTravelCustom}>
+                                                    <td>
+
+                                                        <lightning-formatted-text
+                                                            style="text-align: left; width: 140px; display: flex; text-wrap: wrap; font-weight: 400;"
+                                                            value={expense.From__c}></lightning-formatted-text>
+                                                    </td>
+                                                    <td>
+                                                        <lightning-input data-page={exp.PageName} type="date" read-only
+                                                            variant="label-hidden" data-field="To_Date__c"
+                                                            value={expense.To_Date__c} data-id={expense.fakeId}
+                                                            onchange={handleExpenseChange}
+                                                            data-name={item.customerData.Name}></lightning-input>
+                                                    </td>
+                                                    <td>
+                                                        <lightning-formatted-text
+                                                            style="text-align: left; width: 140px; display: flex; text-wrap: wrap; font-weight: 400;"
+                                                            value={expense.To__c}></lightning-formatted-text>
+                                                    </td>
+                                                </template>
+                                                <td>
+                                                    <lightning-combobox required data-page={exp.PageName}
+                                                        options={ExpenseModeOptions} variant="label-hidden"
+                                                        data-field="Mode__c" value={expense.Mode__c}
+                                                        data-id={expense.fakeId} onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-combobox>
+                                                </td>
+                                                <template if:true={expense.isTravelModeAuto}>
+                                                    <template if:true={expense.isTravelCustom}>
+                                                        <td>
+                                                            <lightning-input data-page={exp.PageName} read-only
+                                                                variant="label-hidden" data-field="Distance__c"
+                                                                value={expense.Distance__c} data-id={expense.fakeId}
+                                                                onchange={handleExpenseChange}
+                                                                data-name={item.customerData.Name}></lightning-input>
+                                                        </td>
+                                                        <td>
+                                                            <lightning-input required data-page={exp.PageName}
+                                                                variant="label-hidden" data-field="Amount__c"
+                                                                value={expense.Amount__c} data-id={expense.fakeId}
+                                                                onchange={handleExpenseChange}
+                                                                data-name={item.customerData.Name}></lightning-input>
+                                                        </td>
+                                                    </template>
+                                                    <template if:false={expense.isTravelCustom}>
+                                                        <td>
+                                                            <lightning-input read-only data-page={exp.PageName}
+                                                                variant="label-hidden" data-field="Distance__c"
+                                                                value={expense.Distance__c} data-id={expense.fakeId}
+                                                                onchange={handleExpenseChange}
+                                                                data-name={item.customerData.Name}></lightning-input>
+                                                        </td>
+                                                        <td>
+                                                            <lightning-input required data-page={exp.PageName}
+                                                                variant="label-hidden" data-field="Amount__c"
+                                                                value={expense.Amount__c} data-id={expense.fakeId}
+                                                                onchange={handleExpenseChange}
+                                                                data-name={item.customerData.Name}></lightning-input>
+                                                        </td>
+                                                    </template>
+                                                </template>
+                                                <template if:false={expense.isTravelModeAuto}>
+                                                    <template if:true={expense.isTravelCustom}>
+                                                        <td>
+                                                            <lightning-input required data-page={exp.PageName}
+                                                                variant="label-hidden" data-field="Distance__c"
+                                                                value={expense.Distance__c} data-id={expense.fakeId}
+                                                                onchange={handleExpenseChange}
+                                                                data-name={item.customerData.Name}></lightning-input>
+                                                        </td>
+                                                        <td>
+                                                            <lightning-input required data-page={exp.PageName} read-only
+                                                                variant="label-hidden" data-field="Amount__c"
+                                                                value={expense.Amount__c} data-id={expense.fakeId}
+                                                                onchange={handleExpenseChange}
+                                                                data-name={item.customerData.Name}></lightning-input>
+                                                        </td>
+                                                    </template>
+                                                    <template if:false={expense.isTravelCustom}>
+                                                        <td>
+                                                            <lightning-input read-only data-page={exp.PageName}
+                                                                variant="label-hidden" data-field="Distance__c"
+                                                                value={expense.Distance__c} data-id={expense.fakeId}
+                                                                onchange={handleExpenseChange}
+                                                                data-name={item.customerData.Name}></lightning-input>
+                                                        </td>
+                                                        <td>
+                                                            <lightning-input read-only required data-page={exp.PageName}
+                                                                variant="label-hidden" data-field="Amount__c"
+                                                                value={expense.Amount__c} data-id={expense.fakeId}
+                                                                onchange={handleExpenseChange}
+                                                                data-name={item.customerData.Name}></lightning-input>
+                                                        </td>
+                                                    </template>
+                                                </template>
+                                                <td>
+                                                    <lightning-input data-page={exp.PageName} variant="label-hidden"
+                                                        data-field="Description__c" value={expense.Description__c}
+                                                        data-id={expense.fakeId} onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                            </template>
+                                            <template if:true={expense.isLodging}>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName} type="date"
+                                                        variant="label-hidden" data-field="From_Date__c"
+                                                        value={expense.From_Date__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        min={item.customerData.CheckInDate}
+                                                        max={item.customerData.CheckOutDate}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName} type="date"
+                                                        variant="label-hidden" data-field="To_Date__c"
+                                                        value={expense.To_Date__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        min={item.customerData.CheckInDate}
+                                                        max={item.customerData.CheckOutDate}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required read-only data-page={exp.PageName}
+                                                        type="number" variant="label-hidden" data-field="No_of_Days__c"
+                                                        value={expense.No_of_Days__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-combobox required data-page={exp.PageName}
+                                                        options={StatePickList} variant="label-hidden"
+                                                        data-field="State_Name__c" value={expense.State_Name__c}
+                                                        data-id={expense.fakeId} onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-combobox>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName}
+                                                        variant="label-hidden" data-field="City_Name__c"
+                                                        value={expense.City_Name__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName}
+                                                        variant="label-hidden" data-field="HotelLodgeName__c"
+                                                        value={expense.HotelLodgeName__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName}
+                                                        variant="label-hidden" data-field="Bill_No__c"
+                                                        value={expense.Bill_No__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName}
+                                                        variant="label-hidden" data-field="Amount__c"
+                                                        value={expense.Amount__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input data-page={exp.PageName} variant="label-hidden"
+                                                        data-field="Description__c" value={expense.Description__c}
+                                                        data-id={expense.fakeId} onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                            </template>
+                                            <template if:true={expense.isBoarding}>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName} type="date"
+                                                        variant="label-hidden" data-field="From_Date__c"
+                                                        value={expense.From_Date__c} min={item.customerData.CheckInDate}
+                                                        data-id={expense.fakeId} onchange={handleExpenseChange}
+                                                        max={item.customerData.CheckOutDate}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName} type="date"
+                                                        variant="label-hidden" data-field="To_Date__c"
+                                                        value={expense.To_Date__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        min={item.customerData.CheckInDate}
+                                                        max={item.customerData.CheckOutDate}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required read-only data-page={exp.PageName}
+                                                        type="number" variant="label-hidden" data-field="No_of_Days__c"
+                                                        value={expense.No_of_Days__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-combobox required data-page={exp.PageName}
+                                                        options={StatePickList} variant="label-hidden"
+                                                        data-field="State_Name__c" value={expense.State_Name__c}
+                                                        data-id={expense.fakeId} onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-combobox>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName}
+                                                        variant="label-hidden" data-field="City_Name__c"
+                                                        value={expense.City_Name__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName}
+                                                        variant="label-hidden" data-field="Amount__c" read-only
+                                                        value={expense.Amount__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input data-page={exp.PageName} variant="label-hidden"
+                                                        data-field="Description__c" value={expense.Description__c}
+                                                        data-id={expense.fakeId} onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                            </template>
+                                            <template if:true={expense.isMiscellaneous}>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName} type="date"
+                                                        variant="label-hidden" data-field="From_Date__c"
+                                                        value={expense.From_Date__c} min={item.customerData.CheckInDate}
+                                                        data-id={expense.fakeId} onchange={handleExpenseChange}
+                                                        max={item.customerData.CheckOutDate}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName}
+                                                        variant="label-hidden" data-field="Paticulars__c"
+                                                        value={expense.Paticulars__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName}
+                                                        variant="label-hidden" data-field="Bill_No__c"
+                                                        value={expense.Bill_No__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName}
+                                                        variant="label-hidden" data-field="Amount__c"
+                                                        value={expense.Amount__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                                <td>
+                                                    <lightning-input required data-page={exp.PageName}
+                                                        variant="label-hidden" data-field="Description__c"
+                                                        value={expense.Description__c} data-id={expense.fakeId}
+                                                        onchange={handleExpenseChange}
+                                                        data-name={item.customerData.Name}></lightning-input>
+                                                </td>
+                                            </template>
+                                            <td style="margin:auto; padding-top : 10px;">
+                                                <div class="card"
+                                                    style="margin:auto; display:flex; align-items: center;">
+                                                    <lightning-file-upload data-id={expense.fakeId}
+                                                        variant="label-hidden" name="fileUploader"
+                                                        accept=".png, .jpg, .pdf, .doc, .docx, .xls,.xlsx, .jpeg"
+                                                        onuploadfinished={handleUploadFinished} multiple>
+                                                    </lightning-file-upload>
+                                                </div>
+                                            </td>
+                                            <td style=" background-color : white !important;">
+                                                <lightning-button variant="brand" icon-name="utility:delete"
+                                                    data-page={exp.PageName} data-name={item.customerData.Id}
+                                                    data-id={expense.fakeId}
+                                                    onclick={handleDeleteExpense}></lightning-button>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </template>
+            </template>
+            <template if:true={emptyList}>
+                <div style="font-size: 25px;
+                    text-align: center;
+                    color: red;
+                    font-weight: 600;
+                    font-family: monospace;
+                    margin-bottom: 20px;">
+                    No Expense For this Visit,<br /> You Might Miss Click CheckIn On Related Customer Connect.<br />
+                </div>
+            </template>
+            <div
+                style="font-family:verdana;font-size:11px; background-color:white;padding:0.5rem; padding-top : 2rem; display: flex; justify-content: center; bottom: 0; position: sticky; z-index: 2000;">
+                <button
+                    style="background-color: #EFEFEF; color: black; border-radius: 4px; border: 1px; padding: 6px 10px;"
+                    title="Primary action" onclick={handleCancelClick} class="slds-m-right_small">Cancel
+                </button>
+                <button
+                    style="background-color: #0176d3; color: white; border-radius: 4px; border: 1px; padding: 6px 10px;"
+                    onclick={handleSaveExpense}>Save</button>
+            </div>
+        </lightning-quick-action-panel>
+    </div>
+    <!-- <div class="mobile-layout">
+        <lightning-quick-action-panel header="UPDATE EXPENSE">
+            <template for:each={customerExpenseData} for:item="item">
+                <div key={item.customerData.Id}
+                    style="line-height : 20px; background-color:#d1c4c4; font-family:verdana;font-size:11px;padding-top: 5px;padding-bottom: 5px;"
+                    class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                    <div class="slds-col slds-p-left_small" style="color:black;">
+                        {item.customerData.customerName} <br /> Check In TIme: {item.customerData.CheckInTime} <br />
+                        Check
+                        Out Time:
+                        {item.customerData.CheckOutTime}</div>
+                </div>
+            </template>
+            <template if:true={isRecordPageSelected}>
+                <lightning-combobox required options={RecordPageOptions} label="Select Record Page"
+                    value={SelectedRecordPage} onchange={handleRecordPageChange}></lightning-combobox>
+            </template>
+            <template if:false={isRecordPageSelected}>
+
+            </template>
+        </lightning-quick-action-panel>
+    </div> -->
+</template>
